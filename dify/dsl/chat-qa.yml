@@ -1,0 +1,275 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: advanced-chat
+  name: ask ai
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/tongyi:0.2.20@83977f8cbc6ccd4a47c3f8a72c454bc42102b20d5b575a2b124d3ebfe92bb226
+    version: null
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        knowledge_file_size_limit: 15
+        single_chunk_attachment_limit: 10
+        skill_file_size_limit: 50
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: llm-answer
+      source: llm
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1789374465775-source-1789374506424-target
+      source: '1789374465775'
+      sourceHandle: source
+      target: '1789374506424'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1789374506424-source-llm-target
+      source: '1789374506424'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - default: 5
+          hint: 召回条数（rag 模式下后端自行检索，此变量供 app 模式使用）
+          label: top_k
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: top_k
+        - default: 0.5
+          hint: 相似度阈值
+          label: score_threshold
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: score_threshold
+        - default: '教学式，简洁分点'
+          hint: 回答风格
+          label: answer_style
+          options: []
+          placeholder: ''
+          required: false
+          type: paragraph
+          variable: answer_style
+        # 注意：本实例 Dify 的 Start 变量不支持数组（只支持 text-input/select/paragraph/
+        # number/checkbox/json_object/file/file-list），且「知识检索」节点无法按变量选库。
+        # 因此这里不声明 kb_ids：后端探测到「未声明」就不会下发该字段，不影响调用。
+      height: 72
+      id: '1789374465775'
+      position:
+        x: -85
+        y: 277
+      positionAbsolute:
+        x: -85
+        y: 277
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1789374506424'
+          - result
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen-max
+          provider: langgenius/tongyi/tongyi
+        prompt_config:
+          jinja2_variables: []
+        prompt_template:
+        - edition_type: basic
+          id: 9b5c5853-7a91-4a9b-88c0-1d4ba433d8bf
+          role: system
+          text: '你是专业的知识助手。请根据以下知识库内容回答用户问题，回答时必须用 [1][2] 的形式标注引用来源，编号与资料（或知识库内容）的先后顺序一致。
+
+
+            若用户消息中已包含【资料】块，请只依据【资料】作答，忽略下面的知识库内容。如果没有任何相关信息，请明确告知用户"抱歉，知识库中没有找到相关信息"，不要编造答案。
+
+
+            ---
+
+            知识库内容：
+
+            {{#context#}}
+
+            ---
+
+
+            用户问题：{{#sys.query#}}'
+        selected: true
+        structured_output_enabled: false
+        title: LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: llm
+      position:
+        x: 809
+        y: 282
+      positionAbsolute:
+        x: 809
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        answer: '{{#llm.text#}}'
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 101
+      id: answer
+      position:
+        x: 1141
+        y: 282
+      positionAbsolute:
+        x: 1141
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        dataset_ids:
+        - ftog4rSR5cMwd0WDzBKmW6Jrjoor8a8r6OH/jeGBiRwioj24h7/sEzYw/eUONro0
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: reranking_model
+          reranking_model:
+            model: qwen3-rerank
+            provider: langgenius/tongyi/tongyi
+          top_k: 4
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1789374465775'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 89
+      id: '1789374506424'
+      position:
+        x: 385
+        y: 282
+      positionAbsolute:
+        x: 385
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    viewport:
+      x: 313.3905083023037
+      y: 195.1318098340064
+      zoom: 0.6597539553864471
+  rag_pipeline_variables: []

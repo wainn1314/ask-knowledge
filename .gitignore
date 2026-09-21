@@ -1,0 +1,32 @@
+# ── Python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── 环境变量（只提交 .env.example） ──────────────────────────────────────
+.env
+backend/.env
+deploy/.env
+
+# ── 运行时数据（上传文件 / 解析结果 / SQLite 库） ────────────────────────
+data/
+backend/data/
+backend/logs/
+
+# ── 前端 ─────────────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-error.log*
+
+# ── 编辑器 / 系统 ────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

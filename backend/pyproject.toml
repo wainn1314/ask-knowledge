@@ -1,0 +1,37 @@
+[project]
+name = "ask-knowledge-backend"
+version = "0.1.0"
+description = "Ask Knowledge AI Learning Partner —— 自建业务后端（Dify 混合方案）"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "sqlalchemy>=2.0.30",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-dotenv>=1.0",
+    "python-multipart>=0.0.9",
+    "PyJWT>=2.8",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+# 生产部署：PostgreSQL 驱动（本机开发用 SQLite 无需安装）
+postgres = ["psycopg[binary]>=3.2"]
+# 真实内容审核（阿里云内容安全）；未安装时自动回退本地规则审核
+aliyun = ["alibabacloud_green20220302>=3.0.0", "alibabacloud_tea_openapi>=0.3.0"]
+# PDF 解析增强（无 pypdf 时 builtin 解析器退化为原始文本流提取）
+parse = ["pypdf>=5.0"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

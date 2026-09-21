@@ -1,0 +1,358 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: workflow
+  name: ask work
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.24@9e12eef09973667f0eaf4f082af883167e1de88740b22e71e71488d020c3778a
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/tongyi:0.2.20@83977f8cbc6ccd4a47c3f8a72c454bc42102b20d5b575a2b124d3ebfe92bb226
+    version: null
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        knowledge_file_size_limit: 15
+        single_chunk_attachment_limit: 10
+        skill_file_size_limit: 50
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1789374991715-source-1789375170833-target
+      source: '1789374991715'
+      sourceHandle: source
+      target: '1789375170833'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1789375170833-source-1789375262584-target
+      source: '1789375170833'
+      sourceHandle: source
+      target: '1789375262584'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1789375262584-source-1789375325074-target
+      source: '1789375262584'
+      sourceHandle: source
+      target: '1789375325074'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1789375325074-source-1789375490372-target
+      source: '1789375325074'
+      sourceHandle: source
+      target: '1789375490372'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - default: medium
+          hint: ''
+          label: difficulty
+          max_length: 2
+          options:
+          - easy
+          - medium
+          - hard
+          placeholder: ''
+          required: true
+          type: select
+          variable: difficulty
+        - default: '3'
+          hint: ''
+          label: count
+          options: []
+          placeholder: ''
+          required: true
+          type: number
+          variable: count
+        - default: ''
+          hide: false
+          hint: ''
+          label: type
+          options: []
+          placeholder: ''
+          required: true
+          type: paragraph
+          variable: type
+        - hint: 出题主题 / 重点知识点（可留空，留空时覆盖【资料】里的主要知识点）
+          label: topic
+          options: []
+          placeholder: ''
+          required: false
+          type: paragraph
+          variable: topic
+        - hint: 后端按所选知识库检索出的原文（出题唯一依据，由后端自动注入）
+          label: context
+          options: []
+          placeholder: ''
+          required: false
+          type: paragraph
+          variable: context
+        # 注意：本实例 Dify 的 Start 变量不支持数组，且「知识检索」节点只能静态勾选知识库，
+        # 所以这里不声明 kb_ids；「题必须出自所选知识库的文档」靠后端下发的 context（【资料】）
+        # 保证，检索节点只作为未声明 context 时的兜底（见 dify/README.md §4）。
+      height: 160
+      id: '1789374991715'
+      position:
+        x: 207
+        y: 318
+      positionAbsolute:
+        x: 207
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        dataset_ids:
+        - ftog4rSR5cMwd0WDzBKmW6Jrjoor8a8r6OH/jeGBiRwioj24h7/sEzYw/eUONro0
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: reranking_model
+          reranking_model:
+            model: qwen3-rerank
+            provider: langgenius/tongyi/tongyi
+          top_k: 4
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1789374991715'
+        - topic
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 89
+      id: '1789375170833'
+      position:
+        x: 509
+        y: 318
+      positionAbsolute:
+        x: 509
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1789375170833'
+          - result
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-v4-flash
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: f07d3f5d-bee1-41aa-ac0f-ff147d432b1a
+          role: system
+          text: "你是出题专家。请**只依据**【资料】里的原文出题：题目、选项、答案、解析都必须出自【资料】，禁止使用资料之外的知识，禁止编造。\n\n【资料】（唯一出题依据，由后端按所选知识库检索后注入）\n{{#1789374991715.context#}}\n\n【知识库检索】（仅在【资料】为空时作为补充；两者冲突时以【资料】为准）\n{{#context#}}\n\n要求：\n- 难度：{{#1789374991715.difficulty#}}\n- 题目数量：{{#1789374991715.count#}} 道\n- 题目类型：{{#1789374991715.type#}}\n- 重点知识点/主题（可留空；留空时覆盖【资料】里的主要知识点）：{{#1789374991715.topic#}}\n- 每道题必须包含：题目、选项（如果是选择题）、正确答案、解析\n- 解析必须引用【资料】中的原句或关键片段，说明为什么选这个答案\n- 每题的 source_index 写【资料】里被引用的段号（如 [1] 或 [1,3]），必须是【资料】中真实存在的编号\n- 【资料】与【知识库检索】都为空时，直接输出 {\"questions\": []}，不要编造题目\n\n请严格按照以下 JSON 格式输出，不要输出任何其他内容：\n\n{\n  \"questions\": [\n    {\n      \"id\": 1,\n      \"question\": \"题目内容\",\n      \"type\": \"单选题/多选题/判断题/简答题\",\n      \"options\": [\"A. xxx\", \"B. xxx\", \"C. xxx\", \"D. xxx\"],\n      \"answer\": \"B\",\n      \"explanation\": \"详细解析，引用【资料】原文说明为什么选B\",\n      \"source_index\": [1]\n    }\n  ]\n}\n\n注意：\n1. 只输出 JSON，不要输出 markdown 代码块标记\n2. 判断题 / 简答题的 options 字段为空数组 []\n3. answer 字段：单选题填选项字母（如 \"B\"），多选题填字母数组（如 [\"A\",\"C\"]），判断题填 正确/错误，简答题填参考答案文本\n4. 每道题都要能在【资料】里找到出处，并把对应段号写进 source_index；找不到就换一个知识点，禁止编造\n"
+        selected: false
+        title: LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1789375262584'
+      position:
+        x: 811
+        y: 318
+      positionAbsolute:
+        x: 811
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        code: "import json\nimport re\n\n\ndef main(llm_output: str) -> dict:\n  \
+          \  text = (llm_output or \"\").strip()\n\n    # 1) 剥掉推理模型（deepseek 等）的思考段\n\
+          \    text = re.sub(r\"<think[\\s\\S]*?</think\\s*>\", \"\", text, flags=re.IGNORECASE)\n\
+          \    text = re.sub(r\"<!--\\s*dify-deepseek-reasoning\\s*-->\", \"\", text)\n\
+          \    text = re.sub(r\"<think[\\s\\S]*$\", \"\", text, flags=re.IGNORECASE)\
+          \  # 未闭合的思考段\n\n    # 2) 剥掉 markdown 代码块围栏\n    text = text.strip()\n  \
+          \  if text.startswith(\"```\"):\n        text = re.sub(r\"^```[A-Za-z]*\\\
+          s*\", \"\", text)\n        text = re.sub(r\"```\\s*$\", \"\", text)\n\n\
+          \    # 3) 只截取最外层 JSON 对象\n    start, end = text.find(\"{\"), text.rfind(\"\
+          }\")\n    if start != -1 and end > start:\n        text = text[start:end\
+          \ + 1]\n\n    # 4) 解析 + 结构校验\n    try:\n        data = json.loads(text)\n\
+          \    except json.JSONDecodeError as e:\n        return {\"success\": \"\
+          False\", \"error\": f\"JSON 解析失败: {str(e)}\", \"raw_output\": text, \"questions\"\
+          : \"[]\"}\n\n    if \"questions\" not in data:\n        return {\"success\"\
+          : \"False\", \"error\": \"缺少 questions 字段\", \"raw_output\": text, \"questions\"\
+          : \"[]\"}\n\n    questions = data[\"questions\"]\n    if not isinstance(questions,\
+          \ list) or not questions:\n        return {\"success\": \"False\", \"error\"\
+          : \"questions 为空或格式不正确\", \"raw_output\": text, \"questions\": \"[]\"}\n\
+          \n    for i, q in enumerate(questions):\n        for field in (\"\
+          question\", \"answer\", \"explanation\"):\n            if field not in q:\n\
+          \                return {\"success\": \"False\", \"error\": f\"第 {i+1} 题缺少字段:\
+          \ {field}\", \"raw_output\": text, \"questions\": \"[]\"}\n        q.setdefault(\"id\", i + 1)\n        q.setdefault(\"\
+          type\", \"简答题\")\n        q.setdefault(\"options\", [])\n\n    return {\"\
+          success\": \"True\", \"error\": \"\", \"raw_output\": text,\n          \
+          \  \"questions\": json.dumps(questions, ensure_ascii=False, indent=2)}\n"
+        code_language: python3
+        outputs:
+          error:
+            children: null
+            type: string
+          questions:
+            children: null
+            type: string
+          raw_output:
+            children: null
+            type: string
+          success:
+            children: null
+            type: string
+        selected: false
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector:
+          - '1789375262584'
+          - text
+          value_type: string
+          variable: llm_output
+      height: 51
+      id: '1789375325074'
+      position:
+        x: 1113
+        y: 318
+      positionAbsolute:
+        x: 1113
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        outputs:
+        - value_selector:
+          - '1789375325074'
+          - success
+          value_type: string
+          variable: success
+        - value_selector:
+          - '1789375325074'
+          - questions
+          value_type: string
+          variable: questions
+        - value_selector:
+          - '1789375325074'
+          - error
+          value_type: string
+          variable: error
+        selected: false
+        title: 输出
+        type: end
+      height: 140
+      id: '1789375490372'
+      position:
+        x: 1415
+        y: 318
+      positionAbsolute:
+        x: 1415
+        y: 318
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    viewport:
+      x: -173.38207547358286
+      y: 154.51546531005852
+      zoom: 0.6597539553864472
+  rag_pipeline_variables: []
